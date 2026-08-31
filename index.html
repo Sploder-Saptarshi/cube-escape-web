@@ -14,6 +14,19 @@
     height: 100%;
   }
 </style>
+<script>
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.RufflePlayer.config = {
+    autoplay: "on",
+    unmuteOverlay: "hidden",
+    logLevel: "trace",
+    warnOnUnsupportedContent: true,
+    contextMenu: "rightClickOnly",
+    showSwfDownloadProgress: true,
+    forceScale: true,
+    letterbox: "off"
+  };
+</script>
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
