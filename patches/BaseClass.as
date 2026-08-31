@@ -1387,7 +1387,7 @@ package
          {
             this.Main.setChildIndex(this.kader,this.Main.numChildren - 1);
          }
-         if(Boolean(this.hintKnop))
+         if(Boolean(this.hintKnop) && this.settingArray[2] >= 2)
          {
             if(_name == "cubeTest" || _name == "theatre" || _name == "mill" || _name == "birthday" || _name == "cave")
             {
@@ -1403,6 +1403,10 @@ package
             {
                this.hintKnop.visible = false;
             }
+         }
+         else if(Boolean(this.hintKnop))
+         {
+            this.hintKnop.visible = false;
          }
          if(Boolean(this.pauseKnop) && _name == "rusty")
          {
