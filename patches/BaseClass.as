@@ -1389,40 +1389,20 @@ package
          }
          if(Boolean(this.hintKnop))
          {
-            this.hintKnop.visible = true;
-         }
-         else if(Boolean(this.hintKnop) && _name == "cubeTest")
-         {
-            this.Main.setChildIndex(this.hintKnop,this.Main.numChildren - 1);
-            this.hintKnop.visible = true;
-         }
-         else if(Boolean(this.hintKnop) && _name == "theatre")
-         {
-            this.Main.setChildIndex(this.hintKnop,this.Main.numChildren - 1);
-            this.hintKnop.visible = true;
-         }
-         else if(Boolean(this.hintKnop) && _name == "mill")
-         {
-            this.Main.setChildIndex(this.hintKnop,this.Main.numChildren - 1);
-            this.hintKnop.visible = true;
-         }
-         else if(Boolean(this.hintKnop) && _name == "birthday")
-         {
-            this.Main.setChildIndex(this.hintKnop,this.Main.numChildren - 1);
-            this.hintKnop.visible = true;
-         }
-         else if(Boolean(this.hintKnop) && _name == "cave")
-         {
-            this.Main.setChildIndex(this.hintKnop,this.Main.numChildren - 1);
-            this.hintKnop.visible = true;
-         }
-         else if(Boolean(this.hintKnop) && this.hintKnop.currentFrame >= 2)
-         {
-            this.hintKnop.gotoAndStop(1);
-         }
-         else
-         {
-            this.hintKnop.visible = false;
+            if(_name == "cubeTest" || _name == "theatre" || _name == "mill" || _name == "birthday" || _name == "cave")
+            {
+               this.Main.setChildIndex(this.hintKnop,this.Main.numChildren - 1);
+               this.hintKnop.visible = true;
+            }
+            else if(this.hintKnop.currentFrame >= 2)
+            {
+               this.hintKnop.gotoAndStop(1);
+               this.hintKnop.visible = false;
+            }
+            else
+            {
+               this.hintKnop.visible = false;
+            }
          }
          if(Boolean(this.pauseKnop) && _name == "rusty")
          {
