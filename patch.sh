@@ -19,6 +19,7 @@ ffdec -replace "$OUTPUT" "$OUTPUT" \
   allCubes "$PATCHES/allCubes.as" \
   SteamHandler "$PATCHES/SteamHandler.as" \
   SaveGameClass "$PATCHES/SaveGameClass.as" \
-  BaseClass "$PATCHES/BaseClass.as"
+  BaseClass "$PATCHES/BaseClass.as" \
+  cubeSpaceScreen "$PATCHES/cubeSpaceScreen.as"
 
 echo "Done. Patched SWF: $OUTPUT"
