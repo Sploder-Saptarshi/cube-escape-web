@@ -16,6 +16,7 @@ package
    import flash.net.SharedObject;
    import flash.net.URLLoader;
    import flash.net.URLRequest;
+   import flash.net.navigateToURL;
    import flash.system.ApplicationDomain;
    import flash.system.Capabilities;
    import flash.utils.getDefinitionByName;
@@ -82,6 +83,8 @@ package
       public var hintKnop:*;
       
       private var hintKnoppen:*;
+      
+      private var _isFullscreen:Boolean = false;
       
       public var levelArray:Array;
       
@@ -1452,17 +1455,19 @@ package
       {
          if(!this.isFullscreen)
          {
-            this.Main.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+            navigateToURL(new URLRequest("javascript:document.documentElement.requestFullscreen();"),"_self");
+            this._isFullscreen = true;
          }
          else
          {
-            this.Main.stage.displayState = StageDisplayState.NORMAL;
+            navigateToURL(new URLRequest("javascript:document.exitFullscreen();"),"_self");
+            this._isFullscreen = false;
          }
       }
       
       public function get isFullscreen() : Boolean
       {
-         return this.Main.stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE;
+         return this._isFullscreen;
       }
       
       private function update(e:Event) : *
