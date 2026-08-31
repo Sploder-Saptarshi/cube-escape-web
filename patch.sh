@@ -20,6 +20,7 @@ ffdec -replace "$OUTPUT" "$OUTPUT" \
   SteamHandler "$PATCHES/SteamHandler.as" \
   SaveGameClass "$PATCHES/SaveGameClass.as" \
   BaseClass "$PATCHES/BaseClass.as" \
-  cubeSpaceScreen "$PATCHES/cubeSpaceScreen.as"
+  cubeSpaceScreen "$PATCHES/cubeSpaceScreen.as" \
+  LanguageClass "$PATCHES/LanguageClass.as"
 
 echo "Done. Patched SWF: $OUTPUT"

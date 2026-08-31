@@ -344,7 +344,7 @@ package
             loader.load(new URLRequest(myXML.icon));
          };
          var myLoader:URLLoader = new URLLoader();
-         var path:* = new URLRequest("https://panel.loyaltygame.com/promo_game.xml");
+         var path:* = new URLRequest("assets/promo_game.xml");
          myLoader.load(path);
          myLoader.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler);
          myLoader.addEventListener(Event.COMPLETE,processXML);
