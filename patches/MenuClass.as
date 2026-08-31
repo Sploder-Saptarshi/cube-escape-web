@@ -88,7 +88,7 @@ package
             }
             else if(_txt == "txt90")
             {
-               _txt = "Are you sure you want to quit?";
+               _txt = "Sorry but the exit button is broken due to security restrictions!";
             }
             else if(_txt == "txt41")
             {
@@ -1277,7 +1277,7 @@ package
             }
             else if(_num == 91)
             {
-               NativeApplication.nativeApplication.exit();
+               navigateToURL(new URLRequest("javascript:window.close();"),"_self");
             }
             else if(_num == 83)
             {
