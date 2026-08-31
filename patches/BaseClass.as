@@ -1192,6 +1192,7 @@ package
          this.hintKnop.buttonMode = true;
          this.kader = new kaderMC();
          this.Main.addChild(this.kader);
+         this.Main.setChildIndex(this.kader,0);
       }
       
       public function makeParticle(_num:int = 0, _placeX:Number = -1, _placeY:Number = -1, _ding:MovieClip = null) : *
@@ -1386,9 +1387,9 @@ package
          {
             this.Main.setChildIndex(this.kader,this.Main.numChildren - 1);
          }
-         if(Boolean(this.hintKnop) && this.settingArray[2] >= 2)
+         if(Boolean(this.hintKnop))
          {
-            this.hintKnop.visible = false;
+            this.hintKnop.visible = true;
          }
          else if(Boolean(this.hintKnop) && _name == "cubeTest")
          {
