@@ -16,8 +16,11 @@ if [ ! -f "$INPUT" ]; then
   exit 1
 fi
 
-echo "==> Step 1: Patching AS3 scripts"
-cp "$INPUT" "$OUTPUT"
+echo "==> Step 1: Copying original files to assets"
+cp "$DIR"/original/* "$ASSETS/"
+
+echo "==> Step 2: Patching AS3 scripts"
+OUTPUT="$ASSETS/CubeEscapeCollection.swf"
 ffdec -replace "$OUTPUT" "$OUTPUT" \
   allCubes "$PATCHES/allCubes.as" \
   SteamHandler "$PATCHES/SteamHandler.as" \
@@ -28,7 +31,7 @@ ffdec -replace "$OUTPUT" "$OUTPUT" \
   pauseScreen "$PATCHES/pauseScreen.as" \
   MenuClass "$PATCHES/MenuClass.as"
 
-echo "==> Step 2: Splitting assets above 25 MB into 24 MB chunks"
+echo "==> Step 3: Splitting assets above 25 MB into 24 MB chunks"
 
 PARTS=()
 SWF_SIZE=0
