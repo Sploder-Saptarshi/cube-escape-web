@@ -13,6 +13,8 @@ jobs:
   deploy:
     runs-on: macos-latest
     timeout-minutes: 15
+    environment:
+      name: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
     permissions:
       actions: read # Only required for a private repo.
       contents: read
