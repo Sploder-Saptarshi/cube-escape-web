@@ -39,9 +39,39 @@ HASH=""
 
 shopt -s nullglob
 
+# Cross-platform helpers. GNU (`stat -c`, `md5sum`, `split -d`) and BSD/macOS
+# (`stat -f`, `md5`, split without `-d`) syntaxes differ, so delegate to
+# python3, which is available on both Linux and macOS runners.
+
+size_of() {
+  python3 -c "import os,sys; print(os.path.getsize(sys.argv[1]))" "$1"
+}
+
+md5_short() {
+  python3 -c "import hashlib,sys; print(hashlib.md5(open(sys.argv[1],'rb').read()).hexdigest()[:12])" "$1"
+}
+
+# Split a file into CHUNK-byte pieces named <prefix><base>.part.NNN with
+# zero-padded numeric suffixes, so they sort in order (like GNU `split -d -a 3`).
+split_parts() {
+  python3 - "$1" "$2" "$3" <<'PY'
+import os, sys
+src, prefix, chunk = sys.argv[1], sys.argv[2], int(sys.argv[3])
+with open(src, "rb") as f:
+    i = 0
+    while True:
+        data = f.read(chunk)
+        if not data:
+            break
+        with open("%s.%03d" % (prefix, i), "wb") as out:
+            out.write(data)
+        i += 1
+PY
+}
+
 for f in "$ASSETS"/*.swf; do
   [ -e "$f" ] || continue
-  size=$(stat -c %s "$f")
+  size=$(size_of "$f")
   if [ "$size" -le "$THRESHOLD" ]; then
     continue
   fi
@@ -51,14 +81,13 @@ for f in "$ASSETS"/*.swf; do
   rm -f "$ASSETS/$base".part.*
   SWF_SIZE=$size
 
-  # Use the fast `split` tool (chunks are zero-padded so they sort in order)
-  split -b "$CHUNK" -d -a 3 "$f" "$ASSETS/$base.part."
+  split_parts "$f" "$ASSETS/$base.part" "$CHUNK"
 done
 
 # Remove the monolithic file(s) that are now stored as chunks
 for f in "$ASSETS"/*.swf; do
   [ -e "$f" ] || continue
-  size=$(stat -c %s "$f")
+  size=$(size_of "$f")
   if [ "$size" -gt "$THRESHOLD" ]; then
     rm -f "$f"
   fi
@@ -71,7 +100,7 @@ for p in "$ASSETS"/*.part.*; do
 done
 
 if [ "${#PARTS[@]}" -gt 0 ]; then
-  HASH=$(md5sum "$ASSETS/${PARTS[0]}" | cut -d' ' -f1 | cut -c1-12)
+  HASH=$(md5_short "$ASSETS/${PARTS[0]}")
 fi
 
 # Build manifest.json without external tools
