@@ -29,7 +29,8 @@ ffdec -replace "$OUTPUT" "$OUTPUT" \
   cubeSpaceScreen "$PATCHES/cubeSpaceScreen.as" \
   LanguageClass "$PATCHES/LanguageClass.as" \
   pauseScreen "$PATCHES/pauseScreen.as" \
-  MenuClass "$PATCHES/MenuClass.as"
+  MenuClass "$PATCHES/MenuClass.as" \
+  com.google.analytics.core.GIFRequest "$PATCHES/GIFRequest.as"
 
 echo "==> Step 3: Splitting assets above 25 MB into 24 MB chunks"
 
