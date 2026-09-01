@@ -1,2 +1,4 @@
-*.swf
+assets/
+*.swf.part.*
 .opencode
+manifest.json
