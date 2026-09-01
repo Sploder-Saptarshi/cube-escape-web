@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-# Deny all permissions by default; grant only what each job needs.
 permissions: {}
 
 jobs:
@@ -16,21 +15,19 @@ jobs:
     environment:
       name: ${{ (github.ref == 'refs/heads/main' && 'production') || 'preview' }}
     permissions:
-      actions: read # Only required for a private repo.
+      actions: read
       contents: read
       deployments: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      # FFDec requires Java (>= 8). Use a portable LTS JDK.
       - name: Set up Java
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
 
-      # Download and extract FFDec (the cross-platform ZIP works on Linux and macOS).
       - name: Install FFDec
         run: |
           FFDEC_VERSION=25.1.0
@@ -47,24 +44,11 @@ jobs:
           export FFDEC_MEMORY=4096m
           ./build.sh
 
-      # Assemble the deployable site so that only index.html + built assets
-      # end up in `dist` (nothing repo-specific can leak).
       - name: Assemble dist
         run: |
           mkdir -p dist
           cp index.html sw.js dist/
           cp -R assets dist/
-
-      # Remove everything that is not part of the deployable site, so no
-      # patch sources, build scripts, the original SWF, or dotfiles/.git
-      # remain in the uploaded tree.
-      - name: Strip repo-specific files
-        run: |
-          rm -rf original patches
-          rm -f build.sh patch.sh start.sh
-          find "$GITHUB_WORKSPACE" -maxdepth 2 -name "*.sh" -delete
-          rm -rf .git .opencode .gitignore .gitattributes
-          find "$GITHUB_WORKSPACE" -maxdepth 2 -name ".*" ! -name "." ! -name ".." ! -path "*/dist/*" -exec rm -rf {} + 2>/dev/null || true
 
       - name: Deploy to Cloudflare Pages
         uses: andykenward/github-actions-cloudflare-pages@46d86e1caa6b86365a41d335db65a6936a1beb39 #v3.5.0
