@@ -1,8 +1,5 @@
 var ASSET = "assets/sounds.swf";
 
-// The cache name is versioned by the manifest hash passed at registration
-// (sw.js?hash=...). A new build -> new hash -> a fresh cache, and stale
-// caches from previous deployments are removed on activate.
 var CACHE = "cube-escape-assets-" + (new URL(self.location.href).searchParams.get("hash") || "unknown");
 
 self.addEventListener("install", function (event) {

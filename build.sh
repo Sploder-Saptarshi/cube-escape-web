@@ -17,6 +17,7 @@ if [ ! -f "$INPUT" ]; then
 fi
 
 echo "==> Step 1: Copying original files to assets"
+mkdir -p "$DIR"/assets
 cp "$DIR"/original/* "$ASSETS/"
 
 echo "==> Step 2: Patching AS3 scripts"

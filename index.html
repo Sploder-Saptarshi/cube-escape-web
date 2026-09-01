@@ -106,8 +106,6 @@
         label.textContent = fmt(loaded) + " / " + fmt(total);
       }
 
-      // Stream one URL, counting bytes for the progress bar. Returns an
-      // ArrayBuffer of the body (used for the split SWF parts).
       function download(url) {
         return fetch(url).then(function (res) {
           if (!res.ok) throw new Error("HTTP " + res.status + " for " + url);
@@ -157,14 +155,9 @@
         })
         .then(function (manifest) {
           var hash = manifest.hash;
-          // Register a service worker that is versioned by the build hash, so
-          // assets/sounds.swf is served from cache instead of hitting the
-          // network again when the main SWF loads it. A new build -> new hash
-          // -> fresh cache (stale ones are cleaned up on activate).
           if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("sw.js?hash=" + hash);
           }
-          // Download and cache-warm all split chunks + sounds in parallel.
           var partPromises = manifest.parts.map(function (p) {
             return download("assets/" + p + "?v=" + hash);
           });
@@ -172,7 +165,6 @@
           var soundsPath = "assets/sounds.swf";
           partPromises.push(download(soundsPath));
           return Promise.all(partPromises).then(function (results) {
-            // Reassemble the SWF from its chunks.
             var parts = results.slice(0, -1);
             var data = parts[0];
             for (var i = 1; i < parts.length; i++) {
@@ -181,8 +173,6 @@
               out.set(new Uint8Array(parts[i]), data.byteLength);
               data = out.buffer;
             }
-            // Store the already-downloaded sounds so the service worker can
-            // serve it from cache when the main SWF loads it later.
             if ("caches" in window) {
               caches.open(soundCache).then(function (cache) {
                 var res = new Response(new Uint8Array(results[results.length - 1]), {
