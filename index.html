@@ -157,7 +157,7 @@
           var partPromises = manifest.parts.map(function (p) {
             return download("assets/" + p + "?v=" + manifest.hash);
           });
-          partPromises.push(download("assets/sounds.swf?v=" + manifest.hash));
+          partPromises.push(download("assets/sounds.swf"));
           return Promise.all(partPromises).then(function (results) {
             // Reassemble the SWF from its chunks.
             var parts = results.slice(0, -1);
