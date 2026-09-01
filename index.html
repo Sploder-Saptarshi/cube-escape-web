@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cube Escape Collection</title>
+<link rel="icon" href="assets/favicon.png" type="image/png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
@@ -153,11 +154,21 @@
           return r.json();
         })
         .then(function (manifest) {
+          var hash = manifest.hash;
+          // Register a service worker that is versioned by the build hash, so
+          // assets/sounds.swf is served from cache instead of hitting the
+          // network again when the main SWF loads it. A new build -> new hash
+          // -> fresh cache (stale ones are cleaned up on activate).
+          if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js?hash=" + hash);
+          }
           // Download and cache-warm all split chunks + sounds in parallel.
           var partPromises = manifest.parts.map(function (p) {
-            return download("assets/" + p + "?v=" + manifest.hash);
+            return download("assets/" + p + "?v=" + hash);
           });
-          partPromises.push(download("assets/sounds.swf"));
+          var soundCache = "cube-escape-assets-" + hash;
+          var soundsPath = "assets/sounds.swf";
+          partPromises.push(download(soundsPath));
           return Promise.all(partPromises).then(function (results) {
             // Reassemble the SWF from its chunks.
             var parts = results.slice(0, -1);
@@ -167,6 +178,16 @@
               out.set(new Uint8Array(data));
               out.set(new Uint8Array(parts[i]), data.byteLength);
               data = out.buffer;
+            }
+            // Store the already-downloaded sounds so the service worker can
+            // serve it from cache when the main SWF loads it later.
+            if ("caches" in window) {
+              caches.open(soundCache).then(function (cache) {
+                var res = new Response(new Uint8Array(results[results.length - 1]), {
+                  headers: { "Content-Type": "application/x-shockwave-flash" }
+                });
+                cache.put(soundsPath, res);
+              });
             }
             stage.classList.add("hidden");
             return bootRuffle(data).then(function () {

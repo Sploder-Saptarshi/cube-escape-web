@@ -52,7 +52,7 @@ jobs:
       - name: Assemble dist
         run: |
           mkdir -p dist
-          cp index.html dist/
+          cp index.html sw.js dist/
           cp -R assets dist/
 
       # Remove everything that is not part of the deployable site, so no
