@@ -47,7 +47,7 @@ jobs:
       - name: Assemble dist
         run: |
           mkdir -p dist
-          cp index.html sw.js dist/
+          cp play.html sw.js dist/
           cp -R assets dist/
 
       - name: Deploy to Cloudflare Pages
